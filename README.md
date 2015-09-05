@@ -3,17 +3,18 @@ phabricator-container
 
 _phabricator-container_ is a port of [hach-que-docker/phabricator](https://github.com/hach-que-docker/phabricator) that differs in the following points:
 
-- Based on [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) instead of [hach-que-docker/systemd-none](https://github.com/hach-que-docker/systemd-none)
-- Doesn't use SSH login on Port 24
-- Allows preamble.php configuration
-- Currently no support for SSL
+  - Based on [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) instead of [hach-que-docker/systemd-none](https://github.com/hach-que-docker/systemd-none)
+  - Doesn't use SSH login on Port 24
+  - Allows preamble.php configuration
+  - Allows sshd keys configuration
+  - Currently no support for SSL
 
 Configuration
 -------------
 
 To configure this image, create a `config` directory, with the following files in it:
   - An executable `script.pre` file to configure phabricator. See below.
-  - Optionally  a`preamble.php` file. See the [phabricator docs](https://secure.phabricator.com/book/phabricator/article/configuring_preamble/) to learn more about preamble configuration.
+  - Optionally a `preamble.php` file. See the [phabricator docs](https://secure.phabricator.com/book/phabricator/article/configuring_preamble/) to learn more about preamble configuration.
   - Optionally include the following keys for the sshd server:
     - `ssh_host_rsa_key`, `ssh_host_rsa_key.pub`
     - `ssh_host_ed25519_key`, `ssh_host_ed25519_key.pub`
