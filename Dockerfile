@@ -73,7 +73,6 @@ COPY services/syslog-ng/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY services/sshd/sshd_config /etc/ssh/sshd_config
 COPY services/sshd/phabricator-ssh-hook.sh /etc/ssh/phabricator-ssh-hook.sh
 RUN rm -f /etc/service/sshd/down
-RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # Setup nginx
 RUN mkdir /etc/service/nginx
