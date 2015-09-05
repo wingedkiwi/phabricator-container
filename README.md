@@ -8,11 +8,19 @@ _phabricator-container_ is a port of [hach-que-docker/phabricator](https://githu
 - Allows preamble.php configuration
 - Currently no support for SSL
 
-Usage
-----------
+Configuration
+-------------
 
-To configure this image, create a `config` directory, with a `script.pre` file inside it.  This
-file should be marked as executable.  Place the following content in that file:
+To configure this image, create a `config` directory, with the following files in it:
+  - An executable `script.pre` file to configure phabricator. See below.
+  - Optionally  a`preamble.php` file. See the [phabricator docs](https://secure.phabricator.com/book/phabricator/article/configuring_preamble/) to learn more about preamble configuration.
+  - Optionally include the following keys for the sshd server:
+    - `ssh_host_rsa_key`, `ssh_host_rsa_key.pub`
+    - `ssh_host_ed25519_key`, `ssh_host_ed25519_key.pub`
+    - `ssh_host_ecdsa_key`, `ssh_host_ecdsa_key.pub`
+    - `ssh_host_dsa_key`, `ssh_host_dsa_key.pub`
+
+Example `script.pre` file:
 
     #!/bin/bash
 
@@ -31,9 +39,8 @@ file should be marked as executable.  Place the following content in that file:
     # Set the base URI that will be used to access Phabricator:
     ./bin/config set phabricator.base-uri "http://myphabricator.com/"
 
-Additionally you can create a `preamble.php` script in the `config` directory. See the [phabricator docs](https://secure.phabricator.com/book/phabricator/article/configuring_preamble/) to know more about preamble configuration.
-
-To run this image:
+Usage
+----------
 
     /usr/bin/docker run -p 80:80 -p 22:22 -p 22280:22280 -v /path/to/config:/config -v /path/to/repo/storage:/srv/repo --name=phabricator wingedkiwi/phabricator-container
 
