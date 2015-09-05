@@ -3,6 +3,17 @@
 set -euo pipefail
 set -x
 
+config_ssh_key() {
+    local file_name=ssh_host_${1}_key
+    if [ -e /config/${file_name} ]; then
+        echo "Copy $1 private key"
+        cp /config/${file_name} /etc/ssh/${file_name}
+        chmod 600 /etc/ssh/${file_name}
+        echo "Derive $1 public key"
+        ssh-keygen -y -f /etc/ssh/${file_name} > /etc/ssh/${file_name}.pub
+    fi
+}
+
 update-ca-certificates
 
 pushd /opt/phabricator
@@ -30,30 +41,10 @@ fi
 
 popd
 
-if [ -e /config/ssh_host_rsa_key ]; then
-    echo "Copy ssh rsa host key"
-    cp /config/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
-    chmod 600 /etc/ssh/ssh_host_rsa_key
-    cp /config/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
-fi
-if [ -e /config/ssh_host_dsa_key ]; then
-    echo "Copy ssh dsa host key"
-    cp /config/ssh_host_dsa_key /etc/ssh/ssh_host_dsa_key
-    chmod 600 /etc/ssh/ssh_host_dsa_key
-    cp /config/ssh_host_dsa_key.pub /etc/ssh/ssh_host_dsa_key.pub
-fi
-if [ -e /config/ssh_host_edcsa_key ]; then
-    echo "Copy ssh edcsa host key"
-    cp /config/ssh_host_edcsa_key /etc/ssh/ssh_edcsa_rsa_key
-    chmod 600 /etc/ssh/ssh_edcsa_rsa_key
-    cp /config/ssh_host_edcsa_key.pub /etc/ssh/ssh_host_edcsa_key.pub
-fi
-if [ -e /config/ssh_host_ed25519_key ]; then
-    echo "Copy ssh ed25519 host key"
-    cp /config/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key
-    chmod 600 /etc/ssh/ssh_host_ed25519_key
-    cp /config/ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub
-fi
+config_ssh_key rsa
+config_ssh_key dsa
+config_ssh_key ecdsa
+config_ssh_key ed25519
 
 pushd /opt/phabricator
 if [ -e /config/preamble.php ]; then

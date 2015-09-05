@@ -15,11 +15,11 @@ Configuration
 To configure this image, create a `config` directory, with the following files in it:
   - An executable `script.pre` file to configure phabricator. See below.
   - Optionally a `preamble.php` file. See the [phabricator docs](https://secure.phabricator.com/book/phabricator/article/configuring_preamble/) to learn more about preamble configuration.
-  - Optionally include the following keys for the sshd server:
-    - `ssh_host_rsa_key`, `ssh_host_rsa_key.pub`
-    - `ssh_host_ed25519_key`, `ssh_host_ed25519_key.pub`
-    - `ssh_host_ecdsa_key`, `ssh_host_ecdsa_key.pub`
-    - `ssh_host_dsa_key`, `ssh_host_dsa_key.pub`
+  - Include the following private keys for the sshd server to avoid key change after a container restart:
+    - `ssh_host_rsa_key`
+    - `ssh_host_ed25519_key`
+    - `ssh_host_ecdsa_key`
+    - `ssh_host_dsa_key`
 
 Example `script.pre` file:
 
