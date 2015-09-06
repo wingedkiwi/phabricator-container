@@ -66,6 +66,16 @@ RUN cd /opt/phabricator/support/aphlict/server && export HOME=`pwd` && npm insta
 RUN mkdir /etc/service/aphlict
 COPY services/aphlict/aphlict.runit /etc/service/aphlict/run
 
+# Setup phd
+RUN mkdir /etc/service/phd-repository-pull
+COPY services/phd/phd-repository-pull.runit /etc/service/phd-repository-pull/run
+
+RUN mkdir /etc/service/phd-task-master
+COPY services/phd/phd-task-master.runit /etc/service/phd-task-master/run
+
+RUN mkdir /etc/service/phd-trigger
+COPY services/phd/phd-trigger.runit /etc/service/phd-trigger/run
+
 # Setup syslog
 COPY services/syslog-ng/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 

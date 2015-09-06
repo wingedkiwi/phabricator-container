@@ -1,3 +1,3 @@
 #!/bin/bash
 set -euo pipefail
-sudo -u git /opt/phabricator/bin/aphlict debug
+exec sudo -u git /opt/phabricator/bin/aphlict debug

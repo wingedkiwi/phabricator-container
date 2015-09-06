@@ -56,3 +56,7 @@ What do these parameters do?
     wingedkiwi/phabricator-container = the name of the image
 
 
+Known issues
+----------
+
+  - phd daemons doesn't terminate cleanly
