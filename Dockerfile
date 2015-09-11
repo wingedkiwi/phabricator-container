@@ -2,7 +2,7 @@
 # Docker image for running https://github.com/phacility/phabricator
 #
 
-FROM        phusion/baseimage
+FROM        wingedkiwi/ubuntu-baseimage:master
 MAINTAINER  Chi Vinh Le <cvl@winged.kiwi>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -37,6 +37,7 @@ RUN     apt-get install -y \
             git \
             curl \
             tar \
+            openssh-server \
         && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # For some reason phabricator doesn't have tagged releases. To support
@@ -63,18 +64,18 @@ RUN touch /var/log/aphlict.log && chown git:wwwgrp-phabricator /var/log/aphlict.
 # Install aphlict dependencies
 RUN cd /opt/phabricator/support/aphlict/server && export HOME=`pwd` && npm install ws
 # Copy runit file
-RUN mkdir /etc/service/aphlict
-COPY services/aphlict/aphlict.runit /etc/service/aphlict/run
+RUN mkdir /etc/service/30-aphlict
+COPY services/aphlict/aphlict.runit /etc/service/30-aphlict/run
 
 # Setup phd
-RUN mkdir /etc/service/phd-repository-pull
-COPY services/phd/phd-repository-pull.runit /etc/service/phd-repository-pull/run
+RUN mkdir /etc/service/30-phd-repository-pull
+COPY services/phd/phd-repository-pull.runit /etc/service/30-phd-repository-pull/run
 
-RUN mkdir /etc/service/phd-task-master
-COPY services/phd/phd-task-master.runit /etc/service/phd-task-master/run
+RUN mkdir /etc/service/30-phd-task-master
+COPY services/phd/phd-task-master.runit /etc/service/30-phd-task-master/run
 
-RUN mkdir /etc/service/phd-trigger
-COPY services/phd/phd-trigger.runit /etc/service/phd-trigger/run
+RUN mkdir /etc/service/30-phd-trigger
+COPY services/phd/phd-trigger.runit /etc/service/30-phd-trigger/run
 
 # Setup syslog
 COPY services/syslog-ng/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
@@ -82,25 +83,27 @@ COPY services/syslog-ng/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 # Setup sshd
 COPY services/sshd/sshd_config /etc/ssh/sshd_config
 COPY services/sshd/phabricator-ssh-hook.sh /etc/ssh/phabricator-ssh-hook.sh
-RUN rm -f /etc/service/sshd/down
+RUN dpkg-reconfigure openssh-server
 
 # Setup nginx
-RUN mkdir /etc/service/nginx
+RUN mkdir /etc/service/50-nginx
 COPY services/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY services/nginx/fastcgi.conf /etc/nginx/fastcgi.conf
-COPY services/nginx/nginx.runit /etc/service/nginx/run
+COPY services/nginx/nginx.runit /etc/service/50-nginx/run
 
 # Setup php5-fpm
-RUN mkdir /etc/service/php5-fpm
+RUN mkdir /etc/service/40-php5-fpm
 COPY services/php5-fpm/php.ini /etc/php5/fpm/php.ini
 COPY services/php5-fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf
-COPY services/php5-fpm/php5-fpm.runit /etc/service/php5-fpm/run
+COPY services/php5-fpm/php5-fpm.runit /etc/service/40-php5-fpm/run
 
 # Setup phabricator
 RUN     mkdir -p /opt/phabricator/conf/local /var/repo
 
 # Copy init scripts
 COPY init/ /etc/my_init.d/
+
+COPY boot.sh /opt/boot.sh
 
 EXPOSE  80
 ENTRYPOINT ["/sbin/my_init"]
