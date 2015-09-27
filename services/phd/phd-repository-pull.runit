@@ -1,3 +1,0 @@
-#!/bin/bash
-set -euo pipefail
-#sudo -u git /opt/phabricator/bin/phd debug PhabricatorRepositoryPullLocalDaemon >/dev/null 2>&1

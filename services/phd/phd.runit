@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+exec 2>&1
+sudo -u git /opt/phabricator/bin/phd start
+sleep infinity
+
