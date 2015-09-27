@@ -1,6 +1,19 @@
 #!/bin/bash
 set -euo pipefail
-exec 2>&1
 sudo -u git /opt/phabricator/bin/phd start
-sleep infinity
 
+graceful_shutdown() {
+    echo "Shutting down phd daemons"
+    # This gets stuck why? Use workaround..
+    sudo -u git /opt/phabricator/bin/phd stop&
+    until sudo -u git /opt/phabricator/bin/phd status --local > /dev/null; do
+        sleep 1
+    done
+    exit 0
+}
+
+trap graceful_shutdown INT TERM
+
+while true; do
+    sleep 1
+done
