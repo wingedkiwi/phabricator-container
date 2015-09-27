@@ -31,7 +31,7 @@ RUN     apt-get install -y \
             php-apc \
             php5-apcu \
             python-pygments \
-            postfix \
+            exim4 \
             mercurial \
             subversion \
             git \
@@ -78,9 +78,9 @@ RUN mkdir /etc/service/20-sshd
 RUN mkdir /var/run/sshd
 COPY services/sshd/sshd.runit /etc/service/20-sshd/run
 
-# Setup postfix
-RUN mkdir /etc/service/20-postfix
-COPY services/postfix/postfix.runit /etc/service/20-postfix/run
+# Setup exim
+RUN mkdir /etc/service/20-exim
+COPY services/exim/exim.runit /etc/service/20-exim/run
 
 # Setup phabricator
 RUN     mkdir -p /opt/phabricator/conf/local /var/repo
@@ -104,7 +104,6 @@ COPY services/phd/phd.runit /etc/service/50-phd/run
 COPY services/phd/check /etc/service/50-phd/check
 COPY services/phd/finish /etc/service/50-phd/finish
 RUN touch /etc/service/50-phd/disabled
-
 
 # Copy init scripts
 COPY init/ /etc/my_init.d/
