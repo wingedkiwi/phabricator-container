@@ -1,4 +1,4 @@
-NAME = wingedkiwi/phabricator-container
+NAME = wingedkiwi/phabricator
 VERSION = 0.0.1
 
 .PHONY: all build run
