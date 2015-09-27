@@ -105,7 +105,5 @@ COPY services/phd/phd.runit /etc/service/50-phd/run
 # Copy init scripts
 COPY init/ /etc/my_init.d/
 
-COPY boot.sh /opt/boot.sh
-
 EXPOSE  80
 ENTRYPOINT ["/sbin/my_init"]
