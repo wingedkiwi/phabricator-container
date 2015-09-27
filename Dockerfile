@@ -101,9 +101,6 @@ COPY services/nginx/nginx.runit /etc/service/40-nginx/run
 # Setup phd
 RUN mkdir /etc/service/50-phd
 COPY services/phd/phd.runit /etc/service/50-phd/run
-COPY services/phd/check /etc/service/50-phd/check
-COPY services/phd/finish /etc/service/50-phd/finish
-RUN touch /etc/service/50-phd/disabled
 
 # Copy init scripts
 COPY init/ /etc/my_init.d/
