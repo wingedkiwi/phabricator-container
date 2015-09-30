@@ -9,8 +9,6 @@ graceful_shutdown() {
     until sudo -u git /opt/phabricator/bin/phd status --local > /dev/null; do
         sleep 1
     done
-    # give some more time
-    sleep 4
     exit 0
 }
 
