@@ -16,6 +16,14 @@ config_ssh_key() {
 
 update-ca-certificates
 
+if [ -e /config/update-exim4.conf.conf ]; then
+    echo "Copy update-exim4.conf.conf..."
+    cp -f /config/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
+fi
+
+echo "Apply update-exim4.conf..."
+update-exim4.conf
+
 pushd /opt/phabricator
 
 if [ -e /config/script.pre ]; then
