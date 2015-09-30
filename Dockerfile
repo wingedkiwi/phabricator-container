@@ -16,20 +16,6 @@ RUN     add-apt-repository ppa:nginx/stable
 # Add nodejs ppa
 RUN     curl -sL https://deb.nodesource.com/setup | sudo bash -
 
-# Set deb
-RUN     echo "exim4-config  exim4/dc_other_hostnames    string localhost.localdomain; localhost" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_eximconfig_configtype  select  internet site; mail is sent and received directly using SMTP" | debconf-set-selections; \
-        echo "exim4-config  exim4/no_config boolean true" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_postmaster string  postmaster" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_smarthost  string" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_relay_domains  string" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_relay_nets string" | debconf-set-selections; \
-        echo "exim4-config  exim4/mailname  string  localhost" | debconf-set-selections; \
-        echo "exim4-config  exim4/use_split_config  boolean false" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_localdelivery  select  Maildir format in home directory" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_local_interfaces   string  127.0.0.1 ; ::1" | debconf-set-selections; \
-        echo "exim4-config  exim4/dc_minimaldns boolean false" | debconf-set-selections
-
 # TODO: review this dependency list
 RUN     apt-get install -y \
             nodejs \
@@ -95,6 +81,7 @@ COPY services/sshd/sshd.runit /etc/service/20-sshd/run
 # Setup exim
 RUN mkdir /etc/service/20-exim
 COPY services/exim/exim.runit /etc/service/20-exim/run
+COPY services/exim/update-exim4.conf.conf /etc/exim4/update-exim4.conf.conf
 
 # Setup phabricator
 RUN     mkdir -p /opt/phabricator/conf/local /var/repo
